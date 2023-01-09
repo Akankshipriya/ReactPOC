@@ -1,0 +1,79 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { IPost } from "./StudentType";
+import { useFormik } from "formik";
+
+function lol() {
+
+}
+const defaultPosts: IPost[] = [];
+
+export default function App() {
+    const [posts, setPost]: [IPost[], (posts: IPost[]) => void] = useState(defaultPosts);
+
+    const formik = useFormik({
+        initialValues: {
+            stdname: "",
+            contactno: "",
+            Email: "",
+            std: "",
+
+        },
+        onSubmit: values => {
+
+
+        }
+    });
+
+    handleSubmit(event){
+        event?.preventDefault();
+
+        fetch('', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "Name": "asd",
+                "DOB": "2000-12-16",
+                "ContactNo": "987654",
+                "Email": "David@gmail.com",
+                "Std": "5"
+            })
+        })
+
+    }
+
+
+    return <form id="add">
+        <div>
+            <label>Student Name : </label>
+            <input type="text" name="stdname" onChange={formik.handleChange} value={formik.values.stdname} />
+        </div>
+
+        <div>
+
+            <label>Contact No : </label>
+            <input type="text" name="contactno" onChange={formik.handleChange} value={formik.values.contactno} />
+        </div>
+
+        <div>
+
+            <label>Email : </label>
+            <input type="text" name="Email" onChange={formik.handleChange} value={formik.values.Email} />
+        </div>
+
+        <div>
+
+            <label>Std: </label>
+            <input type="text" name="std" onChange={formik.handleChange} value={formik.values.std} />
+        </div>
+
+
+    </form>
+}
+function handleSubmit(event: Event | undefined) {
+    throw new Error("Function not implemented.");
+}
+

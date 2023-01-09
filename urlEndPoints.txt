@@ -1,0 +1,24 @@
+https://localhost:44318/api/Student/GetAllStudentDetails
+
+https://localhost:44318/api/Student/DeleteStudent?id=1
+
+https://localhost:44318/api/Student/AddStudent
+{
+    "Name":"David",
+    "DOB":"2000-12-16",
+    "ContactNo":"987654",
+    "Email":"David@gmail.com",
+    "Std":"5"
+}
+
+https://localhost:44318/api/Student/UpdateStudent?id=2
+
+{
+    "Name":"David",
+    "DOB":"2000-12-16",
+    "ContactNo":"987654",
+    "Email":"David123@gmail.com",
+    "Std":"5"
+}
+
+https://localhost:44318/api/Student/GetStudentDetail?id=50

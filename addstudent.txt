@@ -1,0 +1,62 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { IPost } from "./StudentType";
+import { useFormik } from "formik";
+
+
+export default function App() {
+    const [name, setname] = useState("");
+    const [contactno, setcontactno] = useState("");
+    const [email, setEmail] = useState("");
+    const [std, setstd] = useState("");
+
+    const onSubmitBtnClickHnd = (e: any) => {
+        e.preventDefault();
+        const data = {
+            Name: name,
+            ContactNo: contactno,
+            Email: email,
+            Std: std,
+        };
+        console.log(data);
+        axios
+            .post("https://localhost:44318/api/Student/AddStudent", data)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        console.log(data);
+    };
+
+    return <form onSubmit={onSubmitBtnClickHnd}>
+        <div>
+            <label>Student Name : </label>
+            <input type="text" name="stdname" className="form-control"
+                onChange={(e) => setname(e.target.value)} />
+        </div>
+
+        <div>
+
+            <label>Contact No : </label>
+            <input type="text" name="contactno" onChange={(e) => setcontactno(e.target.value)} />
+        </div>
+
+        <div>
+
+            <label>Email : </label>
+            <input type="text" name="Email" onChange={(e) => setEmail(e.target.value)} />
+        </div>
+
+        <div>
+
+            <label>Std: </label>
+            <input type="text" name="std" onChange={(e) => setstd(e.target.value)} />
+        </div>
+        <button className="btn btn-primary" type="submit">Submit Question</button>
+
+
+    </form>
+}
+
