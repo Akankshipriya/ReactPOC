@@ -1,10 +1,64 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { IPost } from "./StudentType";
-import { useFormik } from "formik";
+import { ErrorMessage, useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 
+interface formErrors {
+    stdname?: string;
+    contactno?: string;
+    email?: string;
+    std?: string
+}
 
 export default function App() {
+
+    const [data, setData] = useState<string>("");
+    const formik = useFormik({
+        initialValues: {
+            stdname: "",
+            contactno: "",
+            email: "",
+            std: "",
+
+        },
+
+        onSubmit: values => {
+            axios
+                .post("https://localhost:44318/api/Student/AddStudent", {Name:values.stdname,ContactNo:values.contactno,Email:values.email,Std:values.std})
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
+        },
+
+        validate: values => {
+
+            let errors: formErrors = {};
+            if (values.stdname == "") {
+                errors.stdname = "Required..!"
+            }
+
+
+            if ((values.contactno).length >= 10) {
+                errors.contactno = "Contact No can not be more than 9 char"
+            }
+
+            if (values.email == "") {
+                errors.email = "Required..!"
+            }
+
+            return errors
+
+        }
+
+    });
+
+
+    const navigate = useNavigate()
     const [name, setname] = useState("");
     const [contactno, setcontactno] = useState("");
     const [email, setEmail] = useState("");
@@ -28,35 +82,41 @@ export default function App() {
                 console.log(err);
             });
         console.log(data);
+        window.alert("value updated")
     };
 
-    return <form onSubmit={onSubmitBtnClickHnd}>
-        <div>
-            <label>Student Name : </label>
-            <input type="text" name="stdname" className="form-control"
-                onChange={(e) => setname(e.target.value)} />
-        </div>
+    return <div className="mt-5 mx-5">
+        <form onSubmit={formik.handleSubmit}>
+            <div className="mx">
+                <label className="form-label float-start">Student Name : </label>
+                <input type='text' name='stdname' className="form-control" onChange={formik.handleChange} value={formik.values.stdname} />
+                {formik.errors.stdname ? <div className="alert alert-danger">{formik.errors.stdname}</div> : null}
+            </div>
 
-        <div>
+            <div>
 
-            <label>Contact No : </label>
-            <input type="text" name="contactno" onChange={(e) => setcontactno(e.target.value)} />
-        </div>
+                <label className="form-label float-start">Contact No : </label>
+                <input type='text' name='contactno' onChange={formik.handleChange} className="form-control" value={formik.values.contactno} />
+                {formik.errors.contactno ? <div className="alert alert-danger">{formik.errors.contactno}</div> : null}
+            </div>
 
-        <div>
+            <div>
 
-            <label>Email : </label>
-            <input type="text" name="Email" onChange={(e) => setEmail(e.target.value)} />
-        </div>
+                <label className="form-label float-start">Email : </label>
+                <input type='text' name='email' className="form-control" onChange={formik.handleChange} value={formik.values.email} />
 
-        <div>
+            </div>
 
-            <label>Std: </label>
-            <input type="text" name="std" onChange={(e) => setstd(e.target.value)} />
-        </div>
-        <button className="btn btn-primary" type="submit">Submit Question</button>
+            <div>
 
-
-    </form>
+                <label className="form-label float-start">Std: </label>
+                <input type='text' name='std' className="form-control" onChange={formik.handleChange} value={formik.values.std} />
+            </div>
+            <div className="mx-auto">
+                <button className="btn btn-success mx-3 my-3" type="submit">Add Student</button>
+                <button className="btn btn-primary mx-3 my-3" onClick={() => navigate('/')} type="submit">Go Back</button>
+            </div>
+        </form>
+    </div>
 }
 

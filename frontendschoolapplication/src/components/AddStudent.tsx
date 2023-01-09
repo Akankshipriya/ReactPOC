@@ -1,86 +1,80 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { IPost } from "./StudentType";
 import { ErrorMessage, useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import { baseUrl, createUrl } from "./common";
+import { formErrors } from "./StudentType";
 
-
-export default function App() {
+export default function AddStudent() {
+    const navigate = useNavigate()
     const formik = useFormik({
         initialValues: {
             stdname: "",
             contactno: "",
-            Email: "",
+            email: "",
             std: "",
 
         },
+
         onSubmit: values => {
+            axios
+                .post(createUrl, {Name:values.stdname,ContactNo:values.contactno,Email:values.email,Std:values.std})
+                .then((res) => {
+                    window.alert("New Record Inserted")
+                    navigate('/')
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
         },
 
         validate: values => {
-            
-            let error:any = {}
 
-            if (values.stdname=="") {
-                error.stdname('Required')
+            let errors: formErrors = {};
+            if (values.stdname == "") {
+                errors.stdname = "Required..!"
             }
+
+
+            if ((values.contactno).length >= 10) {
+                errors.contactno = "Contact No can not be more than 9 char"
+            }
+
+            if (values.email == "") {
+                errors.email = "Required..!"
+            }
+            return errors
+
         }
 
     });
-    const navigate = useNavigate()
-    const [name, setname] = useState("");
-    const [contactno, setcontactno] = useState("");
-    const [email, setEmail] = useState("");
-    const [std, setstd] = useState("");
-
-    const onSubmitBtnClickHnd = (e: any) => {
-        e.preventDefault();
-        const data = {
-            Name: name,
-            ContactNo: contactno,
-            Email: email,
-            Std: std,
-        };
-        console.log(data);
-        axios
-            .post("https://localhost:44318/api/Student/AddStudent", data)
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        console.log(data);
-        window.alert("value updated")
-    };
 
     return <div className="mt-5 mx-5">
-        <form onSubmit={onSubmitBtnClickHnd}>
+        <form onSubmit={formik.handleSubmit}>
             <div className="mx">
                 <label className="form-label float-start">Student Name : </label>
-                <input type="text" name="stdname" className="form-control" 
-                    onChange={(e) => setname(e.target.value)} />
+                <input type='text' name='stdname' className="form-control" onChange={formik.handleChange} value={formik.values.stdname} />
+                {formik.errors.stdname ? <div className="alert alert-danger">{formik.errors.stdname}</div> : null}
             </div>
-            <h1>{formik.errors.stdname}</h1>
-            <div>{formik.errors.stdname?<div>{formik.errors.stdname}</div>:null}</div>
-            
 
             <div>
 
                 <label className="form-label float-start">Contact No : </label>
-                <input type="text" name="contactno" className="form-control" onChange={(e) => setcontactno(e.target.value)} />
+                <input type='text' name='contactno' onChange={formik.handleChange} className="form-control" value={formik.values.contactno} />
+                {formik.errors.contactno ? <div className="alert alert-danger">{formik.errors.contactno}</div> : null}
             </div>
 
             <div>
 
                 <label className="form-label float-start">Email : </label>
-                <input type="text" name="Email" className="form-control" onChange={(e) => setEmail(e.target.value)} />
+                <input type='text' name='email' className="form-control" onChange={formik.handleChange} value={formik.values.email} />
+
             </div>
 
             <div>
 
                 <label className="form-label float-start">Std: </label>
-                <input type="text" name="std" className="form-control" onChange={(e) => setstd(e.target.value)} />
+                <input type='text' name='std' className="form-control" onChange={formik.handleChange} value={formik.values.std} />
             </div>
             <div className="mx-auto">
                 <button className="btn btn-success mx-3 my-3" type="submit">Add Student</button>

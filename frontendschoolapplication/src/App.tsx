@@ -6,7 +6,6 @@ import StudentList from './components/StudentList';
 import { JsxAttribute } from 'typescript';
 import AddStudent from './components/AddStudent';
 import NavBar from './components/NavBar';
-import ModelPopUp from './components/modelPopUp';
 import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import EditStudent from './components/EditStudent';
