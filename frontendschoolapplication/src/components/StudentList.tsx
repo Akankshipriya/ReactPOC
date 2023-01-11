@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { saveIdInlocal, StudentListUrl } from "./common";
+import { json } from "stream/consumers";
+import { baseUrl, saveIdInlocal} from "./common";
 import { IStudent } from "./StudentType";
 
 const defaultStudents: IStudent[] = [];
@@ -9,9 +10,9 @@ const defaultStudents: IStudent[] = [];
 export default function App() {
     const [students, setStudents]: [IStudent[], (students: IStudent[]) => void] = useState(defaultStudents);
     const navigate = useNavigate()
-
+    
     const getStudentDetails = () => {
-        axios.get(StudentListUrl)
+        axios.get(baseUrl + "GetAllStudentDetails")
             .then((response) => {
                 setStudents(response.data);
             })
@@ -20,23 +21,6 @@ export default function App() {
             })
     }
 
-    // function saveIdInlocalAndNavigate(Id: number) {
-    //     localStorage.setItem('StudentID', Id.toString())
-    //     navigate("./EditStudent")
-    // }
-
-    // const getStudentDetail=(id:any)=>{
-    //     console.log(id)
-    //     axios.get(`https://localhost:44318/api/Student/GetStudentDetail?id=${id}`)
-    //     .then((response)=>{
-    //         console.log(response.data);
-    //         localStorage.setItem('StudentID',response.data.studentId)
-    //         navigate("./EditStudent")
-    //     })
-    //     .catch((error)=>{
-    //         console.log(error)
-    //     })
-    // }
     function editbuttonclick(Id: number){
         saveIdInlocal(Id)
         navigate("./EditStudent")
@@ -58,27 +42,11 @@ export default function App() {
     }
     function deleteRow(id: any) {
         console.log("delete")
-        axios.delete(`https://localhost:44318/api/Student/DeleteStudent?id=${id}`)
+        axios.delete(baseUrl+"DeleteStudent?id="+id)
             .then(res => {
                 
             })
     }
-
-    // function UpdateRow(id: any, e: any) {
-    //     console.log("delete")
-    //     axios.delete(`https://localhost:44318/api/Student/UpdateStudent?id=${id}`)
-    //         .then(res => {
-
-    //         })
-
-    //         let a=window.confirm("Are you sure you want to delete the row?");
-    //         if(a==true)
-    //         {
-    //             window.location.reload()
-    //         }
-
-    // }
-
 
     if (!students) return null;
 
@@ -119,3 +87,4 @@ export default function App() {
         </div>
     );
 }
+

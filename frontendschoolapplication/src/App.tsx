@@ -9,7 +9,6 @@ import NavBar from './components/NavBar';
 import { Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import EditStudent from './components/EditStudent';
-import Apiservices from './components/Apiservices';
 
 function App() {
   return (
@@ -20,7 +19,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path='/AddStudent' element={<AddStudent />} />
             <Route path='/EditStudent' element={<EditStudent />} />
-            <Route path='/Apiservices' element={<Apiservices />} />
   </Routes>  }  
     </div>
   );

@@ -19,5 +19,6 @@ namespace SchoolApplicationWebApi.DataAccessLayer
         public string Email { get; set; }
         public string Std { get; set; }
 
+
     }
 }

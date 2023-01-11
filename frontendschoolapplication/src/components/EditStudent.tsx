@@ -3,104 +3,24 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ErrorMessage, useFormik } from "formik";
-import { formErrors } from "./StudentType";
-import { EditUrl } from "./common";
-
-
-
-// const defaultPosts: IPost[] = [];
+import { formErrors, IStudent } from "./StudentType";
+import { baseUrl } from "./common";
+import { SignatureDeclaration } from "typescript";
 
 export default function EditStudent() {
-    //databeforeUpdation
-
-
-    // const [posts, setPost]: [IPost[], (posts: IPost[]) => void] = useState(defaultPosts);
-    // const [post, setPosts]: [IPost[], (posts: IPost[]) => void] = useState(defaultPosts);
-
-
-
-
-    // function UpdateRow(id: any, e: any) {
-    //     console.log("delete")
-    //     axios.put(`https://localhost:44318/api/Student/UpdateStudent?id=${id}`,)
-    //         .then(res => {
-    //             //add alert message
-    //             //
-    //         })
-
-    //         let a=window.confirm("Are you sure you want to delete the row?");
-    //         if(a==true)
-    //         {
-    //             window.location.reload()
-    //         }
-
-    // }
-    // const [name1, setname1] = useState("");
-    // const [contact1, setcontact1] = useState("");
-    // const [email1, setemail1] = useState("");
-    // const [std1, setstd1] = useState("");
-    // const [id1, setid1] = useState("")
-    // const getStudentDetail = (id: any) => {
-
-    //     console.log(id)
-    //     axios.get(`https://localhost:44318/api/Student/GetStudentDetail?id=${id}`)
-    //         .then((response) => {
-    //             setname1(response.data.name)
-    //             setcontact1(response.data.contactNo)
-    //             setemail1(response.data.email)
-    //             setstd1(response.data.std)
-    //             setid1(response.data.studentId)
-    //         })
-    //         .catch((error) => {
-    //             console.log(error)
-    //         })
-    // }
-
-    // getStudentDetail(localStorage.getItem('StudentID'))
-
-    // const navigate = useNavigate()
-    // const [name, setname] = useState(name1);
-    // const [contactno, setcontactno] = useState(name1);
-    // const [email, setEmail] = useState(name1);
-    // const [std, setstd] = useState(name1);
-
-
-    // const onSubmitBtnClickHnd = (e: any) => {
-
-    //     const data = {
-    //         Name: name,
-    //         ContactNo: contactno,
-    //         Email: email,
-    //         Std: std,
-    //     };
-    //     console.log(name1, contact1, email1);
-    //     axios
-    //         .put(`https://localhost:44318/api/Student/UpdateStudent?id=${localStorage.getItem('StudentID')}`, data)
-    //         .then((res) => {
-    //             console.log(res);
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    //     console.log();
-
-    // };
-
-    const [name, setname] = useState("");
-    const [contact, setcontact] = useState("");
-    const [email, setemail] = useState("");
-    const [std, setstd] = useState("");
-    const [id, setid] = useState("")
+    
+    const [student, setStudent] = useState<IStudent>();
 
     const getStudentDetail = (id: number) => {
-        axios.get(`https://localhost:44318/api/Student/GetStudentDetail?id=${id}`)
+        axios.get(baseUrl + "GetStudentDetail?id=" + id)
             .then((response) => {
-                console.log(response.data)
-                setname(response.data.name)
-                setcontact(response.data.contactNo)
-                setemail(response.data.email)
-                setstd(response.data.std)
-                setid(response.data.studentId)
+                setStudent({
+                    studentId: response.data.studentId,
+                    name: response.data.name,
+                    contactNo: response.data.contactNo,
+                    email: response.data.email,
+                    std: response.data.std
+                })
             })
             .catch((error) => {
                 console.log(error)
@@ -112,18 +32,19 @@ export default function EditStudent() {
     }, []);
 
     const navigate = useNavigate()
+    const initialValues = {
+        stdname: student?.name,
+        contactno: student?.contactNo,
+        email: student?.email,
+        std: student?.std,
+    };
+
     const formik = useFormik({
-        initialValues: {
-            stdname: "",
-            contactno: "",
-            email: "",
-            std: "",
-        },
+        initialValues,
 
         onSubmit: values => {
-            
             axios
-                .put(EditUrl+"?id="+localStorage.getItem('StudentID'), { Name: values.stdname, ContactNo: values.contactno, Email: values.email, Std: values.std })
+                .put(baseUrl + "UpdateStudent" + "?id=" + localStorage.getItem('StudentID'), data)
                 .then((res) => {
                     window.alert("Record Updated Successfully")
                     navigate('/')
@@ -137,51 +58,78 @@ export default function EditStudent() {
         validate: values => {
 
             let errors: formErrors = {};
-            if (values.stdname == "") {
-                errors.stdname = "Required..!"
+            if (data.Name == null) {
+                errors.stdname = "Name is required"
+            }
+            else if (data.Name.length <= 2) {
+                errors.stdname = "Name should have more than 2 char! Please enter valid name"
             }
 
-
-            if ((values.contactno).length >= 10) {
-                errors.contactno = "Contact No can not be more than 9 char"
+            if (data.ContactNo == null) {
+                errors.contactno = "Contact No is required"
+            }
+            else if (!/^[7-9]\d{9}$/.test(data.ContactNo)) {
+                errors.contactno = "Your contact no should be 10 digits starting with 7 or 8 or 9"
             }
 
-            if (values.email == "") {
-                errors.email = "Required..!"
+            if (data.Email == null) {
+                errors.email = "Email is required"
             }
+            else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.Email)) {
+                errors.email = 'Invalid ! Please enter a valid email address';
+            }
+
+            if (data.Std == null) {
+                errors.std = "Std No is required"
+            }
+            else if ((Number(data.Std) < 1) || (Number(data.Std) > 12)) {
+                errors.std = "Std should we in between 1 and 12"
+            }
+            else if (!/^[0-9]+$/.test(data.Std)) {
+                errors.std = "Std can only be numeric! Please enter a valid std"
+            }  
             return errors
         }
     });
 
+    console.log("Values in formik", formik.values.stdname)
+    const data = {
+        Name: formik.values.stdname != null ? formik.values.stdname : student?.name,
+        ContactNo: formik.values.contactno != null ? formik.values.contactno : student?.contactNo,
+        Email: formik.values.email != null ? formik.values.email : student?.email,
+        Std: formik.values.std != null ? formik.values.std : student?.std
+    }
 
     return <div className="mt-5 mx-5">
         <form onSubmit={formik.handleSubmit}>
 
             <div className="mx">
                 <label className="form-label float-start">Student Id : </label>
-                <input type='text' name='stdname' className="form-control" defaultValue={id} disabled  />
+                <input type='text' name='stdname' className="form-control" defaultValue={student?.studentId} disabled />
             </div>
 
             <div className="mx">
                 <label className="form-label float-start">Student Name : </label>
-                <input type='text' name='stdname' className="form-control" defaultValue={name} onChange={formik.handleChange} />
-                {formik.errors.stdname ? <div className="alert alert-danger">{formik.errors.stdname}</div> : null}
+                <input type='text' name='stdname' className="form-control" defaultValue={student?.name} onChange={formik.handleChange} />
+                { formik.errors.stdname && formik.touched.stdname? <div className="alert alert-danger">{formik.errors.stdname}</div> : null}
             </div>
 
             <div>
                 <label className="form-label float-start">Contact No : </label>
-                <input type='text' name='contactno' defaultValue={contact} onChange={formik.handleChange} className="form-control" />
-                {formik.errors.contactno ? <div className="alert alert-danger">{formik.errors.contactno}</div> : null}
+                <input type='text' name='contactno' defaultValue={student?.contactNo} onChange={formik.handleChange} className="form-control" />
+                {formik.errors.contactno && formik.touched.contactno? <div className="alert alert-danger">{formik.errors.contactno}</div> : null}
             </div>
 
             <div>
                 <label className="form-label float-start">Email : </label>
-                <input type='text' name='email' className="form-control" onChange={formik.handleChange} defaultValue={email}/>
+                <input type='text' name='email' className="form-control" onChange={formik.handleChange} defaultValue={student?.email} />
+                {formik.touched.email && formik.errors.email? <div className="alert alert-danger">{formik.errors.email}</div> : null}
             </div>
 
             <div>
                 <label className="form-label float-start">Std: </label>
-                <input type='text' name='std' className="form-control" onChange={formik.handleChange} defaultValue={std} />
+                <input type='text' name='std' className="form-control" onChange={formik.handleChange} defaultValue={student?.std} />
+                {formik.errors.std && formik.touched.std? <div className="alert alert-danger">{formik.errors.std}</div> : null}
             </div>
             <div className="mx-auto">
                 <button className="btn btn-success mx-3 my-3" type="submit">Update Student</button>
