@@ -13,5 +13,6 @@ namespace SchoolApplicationWebApi.DataAccessLayer
 
         }
         public DbSet<CStudent> Students { get; set; }
+        public DbSet<CCourse> Courses { get; set; }
     }
 }

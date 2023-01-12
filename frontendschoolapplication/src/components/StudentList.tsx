@@ -63,6 +63,7 @@ export default function App() {
                         <th scope="col">Contact No</th>
                         <th scope="col">Email</th>
                         <th scope="col">Std</th>
+                        <th scope="col">Course Name</th>
                         <th scope="col">Action</th>
 
                     </tr>
@@ -75,6 +76,7 @@ export default function App() {
                             <td>{student.contactNo}</td>
                             <td>{student.email}</td>
                             <td>{student.std}</td>
+                            <td>{student.courseName}</td>
                             <td>
                                 <button className='btn btn-info btn-sm mx-2' onClick={(e) => editbuttonclick(student.studentId)}>Edit</button>
 

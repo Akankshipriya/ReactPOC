@@ -32,7 +32,7 @@ namespace SchoolApplicationWebApi.Controllers
                 }
                 return NotFound("No Record To Display! Please insert data first");
             }
-            catch(Exception e)
+            catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -96,7 +96,9 @@ namespace SchoolApplicationWebApi.Controllers
                     Name = StudentObj.Name,
                     ContactNo = StudentObj.ContactNo,
                     Email = StudentObj.Email,
-                    Std = StudentObj.Std
+                    Std = StudentObj.Std,
+                    CourseName = StudentObj.CourseName,
+                    Course = StudentObj.Course
                 });
                 _db.SaveChanges();
                 return Ok();
@@ -122,6 +124,8 @@ namespace SchoolApplicationWebApi.Controllers
                         existingStudent.ContactNo = StudentObj.ContactNo;
                         existingStudent.Email = StudentObj.Email;
                         existingStudent.Std = StudentObj.Std;
+                        existingStudent.CourseName = StudentObj.CourseName;
+                        existingStudent.Course = StudentObj.Course;
                         _db.SaveChanges();
                         return Ok();
                     }

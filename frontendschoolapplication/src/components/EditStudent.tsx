@@ -3,9 +3,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ErrorMessage, useFormik } from "formik";
-import { formErrors, IStudent } from "./StudentType";
+import { formErrors, ICourse, IStudent } from "./StudentType";
 import { baseUrl } from "./common";
 import { SignatureDeclaration } from "typescript";
+
+const defaultCourses: ICourse[] = [];
 
 export default function EditStudent() {
     
@@ -19,7 +21,8 @@ export default function EditStudent() {
                     name: response.data.name,
                     contactNo: response.data.contactNo,
                     email: response.data.email,
-                    std: response.data.std
+                    std: response.data.std,
+                    courseName:response.data.courseName
                 })
             })
             .catch((error) => {
@@ -28,8 +31,10 @@ export default function EditStudent() {
     }
 
     useEffect(() => {
+        getCourseDetails()
         getStudentDetail(Number(localStorage.getItem('StudentID')))
     }, []);
+
 
     const navigate = useNavigate()
     const initialValues = {
@@ -37,6 +42,7 @@ export default function EditStudent() {
         contactno: student?.contactNo,
         email: student?.email,
         std: student?.std,
+        coursename: student?.courseName
     };
 
     const formik = useFormik({
@@ -92,13 +98,29 @@ export default function EditStudent() {
         }
     });
 
+
     console.log("Values in formik", formik.values.stdname)
     const data = {
         Name: formik.values.stdname != null ? formik.values.stdname : student?.name,
         ContactNo: formik.values.contactno != null ? formik.values.contactno : student?.contactNo,
         Email: formik.values.email != null ? formik.values.email : student?.email,
-        Std: formik.values.std != null ? formik.values.std : student?.std
+        Std: formik.values.std != null ? formik.values.std : student?.std,
+        CourseName: formik.values.coursename!=null?formik.values.coursename:student?.courseName,
+        course: null
     }
+
+    const [courses, setcourse]: [ICourse[], (students: ICourse[]) => void] = useState(defaultCourses);
+
+    const getCourseDetails = () => {
+        axios.get("https://localhost:44318/api/Course/GetAllCoursesName")
+            .then((response) => {
+                setcourse(response.data);
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
 
     return <div className="mt-5 mx-5">
         <form onSubmit={formik.handleSubmit}>
@@ -110,27 +132,38 @@ export default function EditStudent() {
 
             <div className="mx">
                 <label className="form-label float-start">Student Name : </label>
-                <input type='text' name='stdname' className="form-control" defaultValue={student?.name} onChange={formik.handleChange} />
+                <input type='text' name='stdname' className="form-control" defaultValue={student?.name} onChange={formik.handleChange} onBlur={formik.handleBlur}/>
                 { formik.errors.stdname && formik.touched.stdname? <div className="alert alert-danger">{formik.errors.stdname}</div> : null}
             </div>
 
             <div>
                 <label className="form-label float-start">Contact No : </label>
-                <input type='text' name='contactno' defaultValue={student?.contactNo} onChange={formik.handleChange} className="form-control" />
+                <input type='text' name='contactno' defaultValue={student?.contactNo} onChange={formik.handleChange} onBlur={formik.handleBlur} className="form-control" />
                 {formik.errors.contactno && formik.touched.contactno? <div className="alert alert-danger">{formik.errors.contactno}</div> : null}
             </div>
 
             <div>
                 <label className="form-label float-start">Email : </label>
-                <input type='text' name='email' className="form-control" onChange={formik.handleChange} defaultValue={student?.email} />
+                <input type='text' name='email' className="form-control" onChange={formik.handleChange} onBlur={formik.handleBlur} defaultValue={student?.email} />
                 {formik.touched.email && formik.errors.email? <div className="alert alert-danger">{formik.errors.email}</div> : null}
             </div>
 
             <div>
                 <label className="form-label float-start">Std: </label>
-                <input type='text' name='std' className="form-control" onChange={formik.handleChange} defaultValue={student?.std} />
+                <input type='text' name='std' className="form-control" onChange={formik.handleChange} onBlur={formik.handleBlur} defaultValue={student?.std} />
                 {formik.errors.std && formik.touched.std? <div className="alert alert-danger">{formik.errors.std}</div> : null}
             </div>
+
+            <div>
+                <label className="form-label float-start">Course Name </label>
+                <select className="form-select" aria-label="Default select example" name='coursename' onChange={formik.handleChange}>
+                    <option selected>{student?.courseName}</option>
+                    {courses.map((course) => (
+                        <option value={course.courseName} label={course.courseName} />
+                    ))}
+                </select>
+            </div>
+
             <div className="mx-auto">
                 <button className="btn btn-success mx-3 my-3" type="submit">Update Student</button>
                 <button className="btn btn-primary mx-3 my-3" onClick={() => navigate('/')} type="submit">Go Back</button>

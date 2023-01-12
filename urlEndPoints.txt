@@ -22,3 +22,5 @@ https://localhost:44318/api/Student/UpdateStudent?id=2
 }
 
 https://localhost:44318/api/Student/GetStudentDetail?id=50
+
+https://localhost:44318/api/Course/GetAllCoursesDetail
