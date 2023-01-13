@@ -75,7 +75,7 @@ export default function EditStudent() {
                 errors.email = 'Invalid ! Please enter a valid email address';
             }
 
-            if (data.Std == null || data.Std==null) {
+            if (data.Std == null || data.Std=="") {
                 errors.std = "Std No is required"
             }
             else if ((Number(data.Std) < 1) || (Number(data.Std) > 12)) {

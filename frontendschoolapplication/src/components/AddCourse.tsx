@@ -22,7 +22,7 @@ export default function AddCourse() {
                 .post(courseUrl + "AddCourse", data)
                 .then((res) => {
                     window.alert("New Record Inserted")
-                    navigate('/')
+                    navigate('/CourseList')
                 })
                 .catch((err) => {
                     console.log(err);

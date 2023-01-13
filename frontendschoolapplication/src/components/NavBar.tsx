@@ -7,7 +7,6 @@ export default function NavBar() {
                 <a className="navbar-brand mx-4" href="/">School Application</a>
                 <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div className="navbar-nav">
-                        <a className="nav-item nav-link" href="/StudentList">Student List</a>
                         <a className="nav-item nav-link" href="/CourseList">Course List</a>
                     </div>
                 </div>

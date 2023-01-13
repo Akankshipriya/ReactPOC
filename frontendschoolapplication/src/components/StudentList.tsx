@@ -22,7 +22,7 @@ export default function App() {
 
     const NavigatingtoEditPage = (Id: number) => {
         IDsentforedit(Id)
-        navigate("./EditStudent")
+        navigate("/EditStudent")
     }
 
     useEffect(() => {
@@ -52,7 +52,7 @@ export default function App() {
     return (
         <div className="my-4 mx-5">
             <div className='float-end mr-4'>
-                <button className='btn btn-primary' onClick={() => navigate('AddStudent')}>Add Student</button>
+                <button className='btn btn-primary' onClick={() => navigate('/AddStudent')}>Add Student</button>
             </div>
             <table className="table table-bordered">
                 <thead className="table-secondary">

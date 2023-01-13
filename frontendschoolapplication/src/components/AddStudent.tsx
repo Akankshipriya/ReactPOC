@@ -2,7 +2,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { baseUrl } from "./common";
+import { baseUrl, courseUrl } from "./common";
 import { formErrors, ICourse } from "./StudentType";
 
 const defaultCourses: ICourse[] = [];
@@ -84,7 +84,7 @@ export default function AddStudent() {
     const [courses, setcourse]: [ICourse[], (students: ICourse[]) => void] = useState(defaultCourses);
 
     const getCourseDetails = () => {
-        axios.get("https://localhost:44318/api/Course/GetAllCoursesName")
+        axios.get(courseUrl+"GetAllCoursesName")
             .then((response) => {
                 setcourse(response.data);
             })
