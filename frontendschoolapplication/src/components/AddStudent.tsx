@@ -55,7 +55,6 @@ export default function AddStudent() {
                 errors.email = 'Invalid ! Please enter a valid email address';
             }
 
-
             if (values.std == "") {
                 errors.std = "Std No is required"
             }
@@ -68,9 +67,11 @@ export default function AddStudent() {
             return errors
         }
     });
+    
     useEffect(() => {
         getCourseDetails()
     }, []);
+
     const data = {
         Name: formik.values.stdname,
         ContactNo: formik.values.contactno,

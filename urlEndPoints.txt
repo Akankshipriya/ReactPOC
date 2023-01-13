@@ -23,4 +23,10 @@ https://localhost:44318/api/Student/UpdateStudent?id=2
 
 https://localhost:44318/api/Student/GetStudentDetail?id=50
 
-https://localhost:44318/api/Course/GetAllCoursesDetail
+https://localhost:44318/api/Course/GetAllCoursesName
+
+https://localhost:44318/api/Course/AddCourse
+{
+    "CourseName":"CSE1",
+    "TeacherName":"Alish"
+}

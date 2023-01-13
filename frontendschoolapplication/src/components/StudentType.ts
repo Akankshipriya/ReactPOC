@@ -18,4 +18,5 @@ export interface formErrors {
 export interface ICourse {
     courseId:number;
     courseName: string;
+    teacherName:string;
 };

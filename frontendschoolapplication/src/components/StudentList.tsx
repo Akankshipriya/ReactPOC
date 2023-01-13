@@ -1,8 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { json } from "stream/consumers";
-import { baseUrl, saveIdInlocal} from "./common";
+import { baseUrl, IDsentforedit } from "./common";
 import { IStudent } from "./StudentType";
 
 const defaultStudents: IStudent[] = [];
@@ -10,7 +9,7 @@ const defaultStudents: IStudent[] = [];
 export default function App() {
     const [students, setStudents]: [IStudent[], (students: IStudent[]) => void] = useState(defaultStudents);
     const navigate = useNavigate()
-    
+
     const getStudentDetails = () => {
         axios.get(baseUrl + "GetAllStudentDetails")
             .then((response) => {
@@ -21,8 +20,8 @@ export default function App() {
             })
     }
 
-    function editbuttonclick(Id: number){
-        saveIdInlocal(Id)
+    const NavigatingtoEditPage = (Id: number) => {
+        IDsentforedit(Id)
         navigate("./EditStudent")
     }
 
@@ -31,20 +30,20 @@ export default function App() {
     }, []);
 
 
-    function deleteButtonClicked(Id: number){
+    const ConfirmDeleteRow = (Id: number) => {
         let a = window.confirm("Are you sure you want to delete the row?");
-        if (a==true){
-            deleteRow(Id)
+        if (a == true) {
+            DeleteSelectedRow(Id)
         }
         window.location.reload()
 
 
     }
-    function deleteRow(id: any) {
+    const DeleteSelectedRow = (id: number) => {
         console.log("delete")
-        axios.delete(baseUrl+"DeleteStudent?id="+id)
+        axios.delete(baseUrl + "DeleteStudent?id=" + id)
             .then(res => {
-                
+
             })
     }
 
@@ -78,9 +77,9 @@ export default function App() {
                             <td>{student.std}</td>
                             <td>{student.courseName}</td>
                             <td>
-                                <button className='btn btn-info btn-sm mx-2' onClick={(e) => editbuttonclick(student.studentId)}>Edit</button>
+                                <button className='btn btn-info btn-sm mx-2' onClick={(e) => NavigatingtoEditPage(student.studentId)}>Edit</button>
 
-                                <button className='btn btn-danger btn-sm' onClick={(e) => deleteButtonClicked(student.studentId)}>Delete</button>
+                                <button className='btn btn-danger btn-sm' onClick={(e) => ConfirmDeleteRow(student.studentId)}>Delete</button>
                             </td>
                         </tr>
                     )

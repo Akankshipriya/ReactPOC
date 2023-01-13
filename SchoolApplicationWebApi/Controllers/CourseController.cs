@@ -38,5 +38,31 @@ namespace SchoolApplicationWebApi.Controllers
             }
 
         }
+
+        [HttpPost]
+        [Route("AddCourse")]
+        public IActionResult Post(CCourse CourseObj)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                _db.Courses.Add(new CCourse()
+                {
+                    CourseId = CourseObj.CourseId,
+                    CourseName = CourseObj.CourseName,
+                    TeacherName = CourseObj.TeacherName,
+                });
+                _db.SaveChanges();
+                return Ok();
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }
